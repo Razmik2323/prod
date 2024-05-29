@@ -12,9 +12,12 @@
     <h1>
         Hello Shop Index
     </h1>
+    <h3>
+        Cписок ссылок на доступные страницы
+    </h3>
         <ul>
-            {% for name, price in products %}
-                <li>{{ name|capfirst }} for ${{ price|add:'100' }} </li>
+            {% for name in products %}
+                <li>{{ name }}</li>
             {% empty %}
                 No products here
             {% endfor %}
@@ -22,15 +25,5 @@
     <div>
 
     </div>
-
-
-    <div>
-        Time running: {{ time_running }}
-    </div>
-
-    <div>
-        {% lorem 2 p %}
-    </div>
-
 
 {% endblock %}
