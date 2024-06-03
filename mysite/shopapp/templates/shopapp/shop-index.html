@@ -16,14 +16,12 @@
         Cписок ссылок на доступные страницы
     </h3>
         <ul>
-            {% for name in products %}
-                <li>{{ name }}</li>
-            {% empty %}
-                No products here
-            {% endfor %}
+            <li>
+                 <a href="products/">Продукты</a>
+            </li>
+            <li>
+                <a href="orders/">Заказы</a>
+            </li>
         </ul>
-    <div>
-
-    </div>
 
 {% endblock %}

@@ -7,18 +7,7 @@ from .models import Product, Order
 
 
 def shop_index(request: HttpRequest):
-    products = [
-        'products/',
-        'orders/',
-
-    ]
-
-    context = {
-        'time_running': default_timer(),
-        'products': products,
-
-    }
-    return render(request, 'shopapp/shop-index.html', context=context)
+    return render(request, 'shopapp/shop-index.html')
 
 def products_list(request: HttpRequest):
     context = {
