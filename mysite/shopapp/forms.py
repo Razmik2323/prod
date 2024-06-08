@@ -13,3 +13,6 @@ class OrderForm(forms.ModelForm):
         model = Order
         fields = 'user', 'promocode', 'delivery_address'
 
+
+
+
