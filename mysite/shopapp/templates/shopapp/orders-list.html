@@ -34,4 +34,11 @@
         <h3>No products yet</h3>
     {% endif %}
 
+
+<div>
+    <a href="{% url 'shopapp:orders_create' %}">
+        Создать новый заказ
+    </a>
+</div>
+
 {% endblock %}
