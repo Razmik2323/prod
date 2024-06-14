@@ -1,10 +1,9 @@
 from typing import Any
 from django.http import HttpResponse, HttpRequest
-from django.shortcuts import render, reverse, redirect, get_object_or_404
+from django.shortcuts import render, reverse, redirect
 
 from .forms import ProductForm, OrderForm
 from .models import Product, Order
-from django.views import View
 from django.views.generic import ListView, DetailView
 
 
@@ -26,11 +25,10 @@ class ProductsListView(ListView):
     context_object_name = 'products'
 
 
-def orders_list(request: HttpRequest):
-    context = {
-        'orders': Order.objects.select_related('user').prefetch_related('products').all(),
-    }
-    return render(request, 'shopapp/orders-list.html', context=context)
+
+class OrdersListView(ListView):
+    queryset = (Order.objects.select_related('user')
+                .prefetch_related('products'))
 
 
 
