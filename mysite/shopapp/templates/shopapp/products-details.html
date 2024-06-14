@@ -1,0 +1,21 @@
+{% extends "shopapp/base.html" %}
+
+{% block title %}
+    Products № {{ product.pk }}
+{% endblock  %}
+
+{% block body %}
+    <h1>Product <strong> {{ product.name }} </strong></h1>
+    <div>
+        <div>Описание: <em>{{ product.description }}</em></div>
+        <div>Цена: {{ product.price }}</div>
+        <div>Скидка: {{ product.discount }}</div>
+        <div>В архиве: {{ product.archived }}</div>
+    </div>
+    <div>
+        <a href="{% url 'shopapp:products_list' %}">Назад к списку продуктов</a>
+    </div>
+
+
+
+{% endblock  %}

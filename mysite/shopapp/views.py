@@ -1,24 +1,38 @@
+from typing import Any
 from django.http import HttpResponse, HttpRequest
-from django.shortcuts import render, reverse, redirect
+from django.shortcuts import render, reverse, redirect, get_object_or_404
 
 from .forms import ProductForm, OrderForm
 from .models import Product, Order
+from django.views import View
+from django.views.generic import ListView, DetailView
 
 
 def shop_index(request: HttpRequest):
     return render(request, 'shopapp/shop-index.html')
 
-def products_list(request: HttpRequest):
-    context = {
-        'products': Product.objects.all(),
-    }
-    return render(request, 'shopapp/products-list.html', context=context)
+
+
+class ProductsDetailsView(DetailView):
+    template_name = 'shopapp/products-details.html'
+    model = Product
+    context_object_name = 'product'
+
+
+
+class ProductsListView(ListView):
+    template_name = 'shopapp/products-list.html'
+    model = Product
+    context_object_name = 'products'
+
 
 def orders_list(request: HttpRequest):
     context = {
         'orders': Order.objects.select_related('user').prefetch_related('products').all(),
     }
     return render(request, 'shopapp/orders-list.html', context=context)
+
+
 
 def create_product(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
@@ -35,6 +49,8 @@ def create_product(request: HttpRequest) -> HttpResponse:
     }
 
     return render(request, 'shopapp/create-product.html', context=context)
+
+
 
 
 def create_orders(request: HttpRequest) -> HttpResponse:

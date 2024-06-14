@@ -2,19 +2,20 @@
 
 {% block title %}
 
-    Products List
+    Список продуктов
 
 {% endblock %}
 
 {% block body %}
-    <h1> Products </h1>
+    <h1> Продукты </h1>
     {% if products %}
         <div>
         {% for product in products %}
             <div>
-                <p>Name: {{ product.name }}</p>
-                <p>Price: {{ product.price }}</p>
-                <p>Discount: {% firstof product.discount 'no discount' %}</p>
+                <p><a href="{% url 'shopapp:products_details' pk=product.pk %}"
+                    >Имя: {{ product.name }}</a></p>
+                <p>Цена: {{ product.price }}</p>
+                <p>Скидка: {% firstof product.discount 'no discount' %}</p>
 
             </div>
         {% endfor %}
@@ -22,7 +23,7 @@
         </div>
 
     {% else %}
-        <h3>No products yet</h3>
+        <h3>Товаров пока нет</h3>
     {% endif %}
 
 <div>

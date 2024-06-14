@@ -2,21 +2,21 @@
 
 {% block title %}
 
-    Orders List
+    Список заказов
 
 {% endblock %}
 
 {% block body %}
-    <h1> Orders </h1>
+    <h1> Заказы </h1>
     {% if orders %}
         <div>
             {% for order in orders %}
                 <div>
-                    <p>Order by: {% firstof order.user.first_name order.user.username %}</p>
-                    <p>Promocode: <code>{{ order.promocode }}</code></p>
-                    <p>Delivery address: {{ order.delivery_address }}</p>
+                    <p>Заказ от: {% firstof order.user.first_name order.user.username %}</p>
+                    <p>Промо-код: <code>{{ order.promocode }}</code></p>
+                    <p>Адрес доставки: {{ order.delivery_address }}</p>
                     <div>
-                        Products in order:
+                        Продукты в заказе:
                         <ul>
                             {% for product in order.products.all %}
                                 <li>{{ product.name }} for ${{ product.price }}</li>
@@ -31,7 +31,7 @@
         </div>
 
     {% else %}
-        <h3>No products yet</h3>
+        <h3>Заказов пока нет</h3>
     {% endif %}
 
 
