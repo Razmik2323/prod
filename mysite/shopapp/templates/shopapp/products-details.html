@@ -12,6 +12,12 @@
         <div>Скидка: {{ product.discount }}</div>
         <div>В архиве: {{ product.archived }}</div>
     </div>
+
+    <div>
+    <a href="{% url 'shopapp:product_update' pk=product.pk %}">
+        Обнавить продукт
+    </a>
+    </div>
     <div>
         <a href="{% url 'shopapp:products_list' %}">Назад к списку продуктов</a>
     </div>

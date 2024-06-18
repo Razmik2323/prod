@@ -45,6 +45,11 @@ class ProductCreateView(CreateView):
 class ProductUpdateView(UpdateView):
     model = Product
     fields = 'name', 'price', 'description', 'discount'
+    template_name_suffix = '_update_form'
+    def get_success_url(self):
+        return reverse('shopapp:products_details',
+                       kwargs={'pk': self.object.pk},
+                       )
 
 
 def create_orders(request: HttpRequest) -> HttpResponse:
