@@ -26,7 +26,11 @@
         <h3>Товаров пока нет</h3>
     {% endif %}
 
-
+<div>
+    <a href="{% url 'shopapp:products_update' pk=product.pk %}">
+        Обнавить продукт
+    </a>
+</div>
 <div>
     <a href="{% url 'shopapp:product_create' %}">
         Создать новый продукт
