@@ -1,4 +1,3 @@
-from typing import Any
 from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, reverse, redirect
 
@@ -31,6 +30,11 @@ class OrdersListView(ListView):
                 .prefetch_related('products'))
 
 
+class OrdersDetailsView(DetailView):
+    queryset = (Order.objects.select_related('user')
+                .prefetch_related('products'))
+
+
 
 def create_product(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
@@ -56,7 +60,7 @@ def create_orders(request: HttpRequest) -> HttpResponse:
         form = OrderForm(request.POST)
         if form.is_valid():
             form.save()
-            url = reverse('shopapp:orders_list')
+            url = reverse('shopapp:order_list')
             return redirect(url)
     else:
         form = OrderForm()

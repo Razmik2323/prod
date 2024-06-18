@@ -1,11 +1,11 @@
 {% extends "shopapp/base.html" %}
 
 {% block title %}
-    Products № {{ product.pk }}
+    Продукт № {{ product.pk }}
 {% endblock  %}
 
 {% block body %}
-    <h1>Product <strong> {{ product.name }} </strong></h1>
+    <h1>Продукты <strong> {{ product.name }} </strong></h1>
     <div>
         <div>Описание: <em>{{ product.description }}</em></div>
         <div>Цена: {{ product.price }}</div>
