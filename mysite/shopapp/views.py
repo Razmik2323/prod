@@ -3,7 +3,8 @@ from django.shortcuts import render, reverse, redirect
 
 from .forms import ProductForm, OrderForm
 from .models import Product, Order
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.urls import reverse_lazy
 
 
 def shop_index(request: HttpRequest):
@@ -36,23 +37,14 @@ class OrdersDetailsView(DetailView):
 
 
 
-def create_product(request: HttpRequest) -> HttpResponse:
-    if request.method == 'POST':
-        form = ProductForm(request.POST)
-        if form.is_valid():
-            form.save()
-            url = reverse('shopapp:products_list')
-            return redirect(url)
-    else:
-        form = ProductForm()
+class ProductCreateView(CreateView):
+    model = Product
+    fields = 'name', 'price', 'description', 'discount'
+    success_url = reverse_lazy('shopapp:products_list')
 
-    context = {
-        'form': form
-    }
-
-    return render(request, 'shopapp/create-product.html', context=context)
-
-
+class ProductUpdateView(UpdateView):
+    model = Product
+    fields = 'name', 'price', 'description', 'discount'
 
 
 def create_orders(request: HttpRequest) -> HttpResponse:
