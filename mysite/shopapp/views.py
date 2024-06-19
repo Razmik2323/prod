@@ -1,9 +1,9 @@
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
 from django.shortcuts import render, reverse, redirect
 
 from .forms import ProductForm, OrderForm
 from .models import Product, Order
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
 
@@ -21,20 +21,8 @@ class ProductsDetailsView(DetailView):
 
 class ProductsListView(ListView):
     template_name = 'shopapp/products-list.html'
-    model = Product
+    queryset = Product.objects.filter(archived=False)
     context_object_name = 'products'
-
-
-
-class OrdersListView(ListView):
-    queryset = (Order.objects.select_related('user')
-                .prefetch_related('products'))
-
-
-class OrdersDetailsView(DetailView):
-    queryset = (Order.objects.select_related('user')
-                .prefetch_related('products'))
-
 
 
 class ProductCreateView(CreateView):
@@ -51,22 +39,32 @@ class ProductUpdateView(UpdateView):
                        kwargs={'pk': self.object.pk},
                        )
 
+class ProductDeleteView(DeleteView):
+    model = Product
+    success_url = reverse_lazy('shopapp:products_list')
 
-def create_orders(request: HttpRequest) -> HttpResponse:
-    if request.method == 'POST':
-        form = OrderForm(request.POST)
-        if form.is_valid():
-            form.save()
-            url = reverse('shopapp:order_list')
-            return redirect(url)
-    else:
-        form = OrderForm()
+    def form_valid(self, form):
+        success_url = self.get_success_url()
+        self.object.archived = True
+        self.object.save()
+        return HttpResponseRedirect(success_url)
+    
 
-    context = {
-        'form': form
-    }
+class OrdersListView(ListView):
+    queryset = (Order.objects.select_related('user')
+                .prefetch_related('products'))
 
-    return render(request, 'shopapp/create-order.html', context=context)
+
+class OrdersDetailsView(DetailView):
+    queryset = (Order.objects.select_related('user')
+                .prefetch_related('products'))
+
+class CreateOrderView(CreateView):
+    model = Order
+    fields = "user", "products", "dilivery_adress", "promocode"
+    success_url = reverse_lazy("shopapp:orders_list")
+
+
 
 
 

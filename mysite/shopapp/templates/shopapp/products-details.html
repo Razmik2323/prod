@@ -14,9 +14,14 @@
     </div>
 
     <div>
-    <a href="{% url 'shopapp:product_update' pk=product.pk %}">
-        Обнавить продукт
-    </a>
+        <a href="{% url 'shopapp:product_update' pk=product.pk %}">
+            Обнавить продукт
+        </a>
+    </div>
+    <div>
+        <a href="{% url 'shopapp:product_delete' pk=product.pk %}">
+            Архивировать продукт
+        </a>
     </div>
     <div>
         <a href="{% url 'shopapp:products_list' %}">Назад к списку продуктов</a>
