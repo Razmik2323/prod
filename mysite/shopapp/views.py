@@ -1,7 +1,6 @@
-from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
-from django.shortcuts import render, reverse, redirect
+from django.http import HttpRequest, HttpResponseRedirect
+from django.shortcuts import render, reverse
 
-from .forms import ProductForm, OrderForm
 from .models import Product, Order
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
@@ -11,12 +10,10 @@ def shop_index(request: HttpRequest):
     return render(request, 'shopapp/shop-index.html')
 
 
-
 class ProductsDetailsView(DetailView):
     template_name = 'shopapp/products-details.html'
     model = Product
     context_object_name = 'product'
-
 
 
 class ProductsListView(ListView):
@@ -30,14 +27,17 @@ class ProductCreateView(CreateView):
     fields = 'name', 'price', 'description', 'discount'
     success_url = reverse_lazy('shopapp:products_list')
 
+
 class ProductUpdateView(UpdateView):
     model = Product
     fields = 'name', 'price', 'description', 'discount'
     template_name_suffix = '_update_form'
+
     def get_success_url(self):
         return reverse('shopapp:products_details',
                        kwargs={'pk': self.object.pk},
                        )
+
 
 class ProductDeleteView(DeleteView):
     model = Product
@@ -48,7 +48,7 @@ class ProductDeleteView(DeleteView):
         self.object.archived = True
         self.object.save()
         return HttpResponseRedirect(success_url)
-    
+
 
 class OrdersListView(ListView):
     queryset = (Order.objects.select_related('user')
@@ -59,12 +59,24 @@ class OrdersDetailsView(DetailView):
     queryset = (Order.objects.select_related('user')
                 .prefetch_related('products'))
 
+
 class CreateOrderView(CreateView):
     model = Order
-    fields = "user", "products", "dilivery_adress", "promocode"
-    success_url = reverse_lazy("shopapp:orders_list")
+    fields = 'user', 'products', 'delivery_address', 'promocode'
+    success_url = reverse_lazy('shopapp:orders_list')
 
 
+class OrderUpdateView(UpdateView):
+    model = Order
+    fields = 'user', 'products', 'delivery_address', 'promocode'
+    template_name_suffix = '_update_form'
 
+    def get_success_url(self):
+        return reverse('shopapp:orders_detail',
+                       kwargs={'pk': self.object.pk},
+                       )
+    
 
-
+class OrderDeleteView(DeleteView):
+    model = Order
+    success_url = reverse_lazy('shopapp:orders_list')

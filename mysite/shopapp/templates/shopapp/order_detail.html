@@ -19,8 +19,18 @@
 
             </ul>
         </div>
-    </div>
 
+    <div>
+        <a href="{% url 'shopapp:order_update' pk=object.pk %}">
+            Обнавить заказ
+        </a>
+    </div>
+    </div>
+    <div>
+        <a href="{% url 'shopapp:order_delete' pk=object.pk %}">
+            Удалить заказ
+        </a>
+    </div>
     <div>
         <a href="{% url 'shopapp:orders_list' %}">
             Назад к списку заказов
