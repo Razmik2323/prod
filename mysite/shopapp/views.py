@@ -2,7 +2,9 @@ from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import render, reverse
 
 from .models import Product, Order
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import (ListView, DetailView, 
+                                  CreateView, UpdateView, 
+                                  DeleteView)
 from django.urls import reverse_lazy
 
 
@@ -80,3 +82,4 @@ class OrderUpdateView(UpdateView):
 class OrderDeleteView(DeleteView):
     model = Order
     success_url = reverse_lazy('shopapp:orders_list')
+    
