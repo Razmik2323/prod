@@ -6,7 +6,10 @@ from django.views.generic import (ListView, DetailView,
                                   CreateView, UpdateView, 
                                   DeleteView)
 from django.urls import reverse_lazy
-
+from django.contrib.auth.mixins import (LoginRequiredMixin,
+                                        PermissionRequiredMixin,
+                                        UserPassesTestMixin,
+                                        )
 
 def shop_index(request: HttpRequest):
     return render(request, 'shopapp/shop-index.html')
@@ -24,13 +27,27 @@ class ProductsListView(ListView):
     context_object_name = 'products'
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(UserPassesTestMixin, CreateView):
+    def test_func(self):
+        return self.request.user.has_perm("shopapp.add_product")
     model = Product
     fields = 'name', 'price', 'description', 'discount'
     success_url = reverse_lazy('shopapp:products_list')
 
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
 
-class ProductUpdateView(UpdateView):
+
+class ProductUpdateView(UserPassesTestMixin, UpdateView):
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        if self.request.user.has_perm("shopapp.change_product") and self.get_object().created_by == self.request.user:
+            return True
+        else:
+            return False
+
     model = Product
     fields = 'name', 'price', 'description', 'discount'
     template_name_suffix = '_update_form'
@@ -52,12 +69,13 @@ class ProductDeleteView(DeleteView):
         return HttpResponseRedirect(success_url)
 
 
-class OrdersListView(ListView):
+class OrdersListView(LoginRequiredMixin, ListView):
     queryset = (Order.objects.select_related('user')
                 .prefetch_related('products'))
 
 
-class OrdersDetailsView(DetailView):
+class OrdersDetailsView(PermissionRequiredMixin, DetailView):
+    permission_required = "view_order"
     queryset = (Order.objects.select_related('user')
                 .prefetch_related('products'))
 
