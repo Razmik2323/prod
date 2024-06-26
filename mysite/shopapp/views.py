@@ -27,7 +27,8 @@ class ProductsListView(ListView):
     context_object_name = 'products'
 
 
-class ProductCreateView(UserPassesTestMixin, CreateView):
+class ProductCreateView(PermissionRequiredMixin, CreateView):
+    permission_required = 'add_product'
     def test_func(self):
         return self.request.user.has_perm("shopapp.add_product")
     model = Product
