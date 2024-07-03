@@ -1,17 +1,12 @@
 from django.urls import path
 
 from .views import (
-    shop_index,
-    ProductsDetailsView,
-    ProductsListView,
-    OrdersListView,
-    OrdersDetailsView,
-    ProductCreateView,
-    ProductUpdateView,
-    ProductDeleteView,
-    CreateOrderView,
-    OrderUpdateView,
-    OrderDeleteView,
+    shop_index, ProductsDetailsView,
+    ProductsListView, OrdersListView,
+    OrdersDetailsView, ProductCreateView,
+    ProductUpdateView, ProductDeleteView,
+    CreateOrderView, OrderUpdateView,
+    OrderDeleteView, OrderExportView,
 )
 
 app_name = 'shopapp'
@@ -29,6 +24,7 @@ urlpatterns = [
     path('orders/<int:pk>/', OrdersDetailsView.as_view(), name='order_delails'),
     path('orders/<int:pk>/update/', OrderUpdateView.as_view(), name='order_update'),
     path('orders/<int:pk>/delete/', OrderDeleteView.as_view(), name='order_delete'),
+    path('orders/export/', OrderExportView.as_view(), name='orders-export'),
 
 
 ]
