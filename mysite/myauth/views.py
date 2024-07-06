@@ -1,11 +1,13 @@
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.models import User
 from django.contrib.auth.views import LogoutView
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
 
-from django.urls import reverse_lazy
-from django.views.generic import TemplateView, CreateView
+from django.urls import reverse_lazy, reverse
+from django.views.generic import TemplateView, CreateView, ListView, DetailView, UpdateView
 from .models import Profile
 
 class AboutMeView(TemplateView):
@@ -53,3 +55,32 @@ def set_session_view(request: HttpRequest):
 def get_session_view(request: HttpRequest):
     value = request.session.get('foobar', 'default')
     return HttpResponse(f'Session value {value!r}')
+
+
+class UsersList(ListView):
+    template_name = 'myauth/users-list.html'
+    context_object_name = 'profiles'
+    queryset = Profile.objects.all()
+
+
+class UserDetailsView(DetailView):
+    template_name = 'myauth/about-me.html'
+    model = User
+    context_object_name = 'user'
+
+
+class UserUpdateView(UserPassesTestMixin, UpdateView):
+    model = Profile
+    fields = ('avatar',)
+
+    def test_func(self):
+        if self.request.user.is_staff or self.request.user.pk == self.get_object().user_id:
+            return True
+        else:
+            return False
+
+    def get_success_url(self):
+        return reverse(
+            "myauth:user_detail",
+            kwargs={"pk": self.object.user.pk},
+        )
