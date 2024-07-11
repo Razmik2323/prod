@@ -1,33 +1,42 @@
-{% extends "shopapp/base.html" %}
+{% extends 'shopapp/base.html' %}
+
+{% load i18n %}
 
 {% block title %}
-    Продукт № {{ product.pk }}
-{% endblock  %}
+{% translate 'Product'%} #{{ product.pk }}
+{% endblock %}
 
 {% block body %}
-    <h1>Продукты <strong> {{ product.name }} </strong></h1>
-    <div>
-        <div>Описание: <em>{{ product.description }}</em></div>
-        <div>Цена: {{ product.price }}</div>
-        <div>Скидка: {{ product.discount }}</div>
-        <div>В архиве: {{ product.archived }}</div>
-    </div>
 
-    <div>
-        <a href="{% url 'shopapp:product_update' pk=product.pk %}">
-            Обнавить продукт
-        </a>
-    </div>
-    <div>
-        <a href="{% url 'shopapp:product_delete' pk=product.pk %}">
-            Архивировать продукт
-        </a>
-    </div>
-    <div>
-        <a href="{% url 'shopapp:products_list' %}">
-            Назад к списку продуктов</a>
-    </div>
+  <h1>{% translate 'Product'%} <strong>{{ product.name }}</strong></h1>
 
+  <div>
+    {% blocktranslate count des_count=product.description|length%}
+    Length of description only one symbol.
+    {% plural %}
+    Length of description are {{ des_count }} symbols.
+    {% endblocktranslate %}
+    <div>{% translate 'Description'%}: <em>{{ product.description }}</em></div>
+    <div>{% translate 'Price'%}: {{ product.price }}</div>
+    <div>{% translate 'Discount'%}: {{ product.discount }}</div>
+    <div>{% translate 'Archived'%}: {{ product.archived }}</div>
+  </div>
 
+  <br>
 
-{% endblock  %}
+    {% url 'shopapp:product_update' pk=product.pk as product_update_url %}
+    {% url 'shopapp:product_delete' pk=product.pk as product_delete_url %}
+    {% url 'shopapp:products_list' as products_list_url%}
+
+{% blocktranslate %}
+  <div>
+    <a href="{{ product_update_url }}">Update product</a>
+  </div>
+  <div>
+    <a href="{{ product_delete_url }}">Archive product</a>
+  </div>
+  <div>
+    <a href="{{ products_list_url }}">Back to products list</a>
+  </div>
+  {% endblocktranslate %}
+{% endblock %}
