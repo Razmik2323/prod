@@ -1,6 +1,9 @@
 from django.http import HttpRequest, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, reverse
 from django.views import View
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.viewsets import ModelViewSet
 
 from .models import Product, Order
 from django.views.generic import (ListView, DetailView, 
@@ -11,6 +14,9 @@ from django.contrib.auth.mixins import (LoginRequiredMixin,
                                         PermissionRequiredMixin,
                                         UserPassesTestMixin,
                                         )
+
+from .serializers import ProductSerializer, OrderSerializer
+
 
 def shop_index(request: HttpRequest):
     return render(request, 'shopapp/shop-index.html')
@@ -123,4 +129,42 @@ class OrderExportView(UserPassesTestMixin, View):
         }
 
         return JsonResponse(response)
+
+
+class ProductViewSet(ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+    filter_backends = [
+        SearchFilter,
+        OrderingFilter,
+    ]
+    search_fields = ["name", "description"]
+
+    ordering_fields = [
+        "pk",
+        "name",
+        "price",
+    ]
+
+
+class OrderViewSet(ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
+    filter_backends = [
+        DjangoFilterBackend,
+        OrderingFilter
+    ]
+
+    filterset_fields = [
+        "user",
+        "delivery_address"
+
+    ]
+    ordering_fields = [
+        "pk",
+        "created_at",
+    ]
+
     
