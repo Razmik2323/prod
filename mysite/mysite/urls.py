@@ -20,10 +20,15 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 urlpatterns = [
     path('reg/', include('requestdataapp.urls')),
     path('accounts/', include('myauth.urls')),
+    path('api/shema/', SpectacularAPIView.as_view(), name="shema"),
+    path('api/shema/swagger/', SpectacularSwaggerView.as_view(url_name="shema"), name="swagger"),
+    path('api/shema/redoc/', SpectacularRedocView.as_view(url_name="shema"), name="redoc"),
+    path('api/', include('myapiapp.urls')),
 ]
 
 urlpatterns += i18n_patterns(
