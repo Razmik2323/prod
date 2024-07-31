@@ -6,3 +6,4 @@ app_name = 'bloagapp'
 urlpatterns = [
     path("articles/", ListArticlesView.as_view(), name="articles_list"),
 ]
+
