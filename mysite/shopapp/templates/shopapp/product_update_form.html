@@ -1,0 +1,21 @@
+{% extends "shopapp/base.html" %}
+
+{% block title %}
+    Редактировать продукт
+{% endblock  %}
+
+{% block body %}
+    <h1>Редактировать продукт</h1>
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Редактировать</button>
+        </form>
+    </div>
+    <div>
+        <a href="{% url 'shopapp:products_details' pk=object.pk %}">
+            Назад к деталям продукта
+        </a>
+    </div>
+{% endblock  %}
