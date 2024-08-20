@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Manager
 
+from django.urls import reverse
+
 
 def product_preview_directory_path(instance: "Product", filename: str) -> str:
     return "products/product_{pk}/preview/{filename}".format(
@@ -23,6 +25,10 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     archived = models.BooleanField(default=False)
     preview = models.ImageField(null=True, blank=True, upload_to=product_preview_directory_path)
+
+    def get_absolute_url(self):
+        return reverse('shopapp:product', kwargs={'pk': self.pk})
+
 
     def __str__(self):
         return f"Product(pk={self.pk}, name={self.name!r})"
@@ -50,3 +56,4 @@ class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     products = models.ManyToManyField(Product, related_name="orders")
     receipt = models.FileField(null=True, upload_to='orders/receipts/')
+

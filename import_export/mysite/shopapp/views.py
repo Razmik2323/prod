@@ -14,6 +14,8 @@ from .forms import ProductForm
 from .models import Product, Order, ProductImage
 from .serializers import ProductSerializer
 
+from django.contrib.syndication.views import Feed
+from django.urls import reverse_lazy, reverse
 
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
@@ -135,3 +137,19 @@ class ProductsDataExportView(View):
             for product in products
         ]
         return JsonResponse({"products": products_data})
+
+
+class LatestProductsFeed(Feed):
+    title = 'Products'
+    description = 'Updates on Products'
+    link = reverse_lazy('shopapp:products')
+
+    def items(self):
+        return Product.objects.all()
+
+    def item_title(self, item):
+        return item.name
+
+    def item_description(self, item):
+        return item.description[:200]
+
