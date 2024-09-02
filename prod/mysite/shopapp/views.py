@@ -198,3 +198,5 @@ class ProductsDataExportView(View):
             cache.set(cache_key, products_data, 300)
 
         return JsonResponse({"products": products_data})
+
+
